@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#1e3a8a">
+    <meta name="theme-color" content="#1e40af">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,12 +17,10 @@
             --primary-dark: #1e40af;
             --primary-light: #eff6ff;
             --surface: #ffffff;
-            --bg: #f1f5f9;
+            --bg: #f8fafc;
             --text-main: #0f172a;
             --text-sub: #64748b;
             --border: #e2e8f0;
-            --success: #16a34a;
-            --error: #dc2626;
             --safe-bottom: env(safe-area-inset-bottom, 16px);
         }
 
@@ -31,7 +29,6 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
 
         body {
@@ -44,7 +41,7 @@
             overflow: hidden;
         }
 
-        /* App Bar */
+        /* App Top Bar */
         .app-bar {
             background-color: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -75,7 +72,34 @@
             transition: width 0.3s ease;
         }
 
-        /* Swipeable / Step Content Container */
+        /* Native App Install Card */
+        #install-banner {
+            display: none;
+            background: var(--primary-light);
+            border: 1.5px solid var(--primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        #install-banner span {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        #pwa-install-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Viewport / Scrollable area */
         .view-port {
             flex: 1;
             overflow-y: auto;
@@ -93,7 +117,7 @@
         }
         .step-card.active {
             display: flex;
-            animation: fadeIn 0.25s ease-out;
+            animation: fadeIn 0.2s ease-out;
         }
 
         @keyframes fadeIn {
@@ -118,7 +142,7 @@
             line-height: 1.4;
         }
 
-        /* Form Components */
+        /* Form Controls */
         .card-group {
             background: var(--surface);
             border-radius: 12px;
@@ -126,16 +150,16 @@
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         .card-group label.question-title {
             font-size: 0.9rem;
             font-weight: 600;
             line-height: 1.35;
             color: var(--text-main);
+            margin-bottom: 2px;
         }
 
-        /* Native-like List Choices */
         .choice-item {
             display: flex;
             align-items: center;
@@ -164,11 +188,10 @@
             font-size: 0.9rem;
             margin-top: 6px;
             outline: none;
-            user-select: text;
         }
         .text-input-box:focus { border-color: var(--primary); }
 
-        /* Mobile App Segmented Likert Scale */
+        /* Segmented Likert Card */
         .likert-card {
             background: var(--surface);
             border-radius: 12px;
@@ -228,7 +251,7 @@
             font-weight: 600;
         }
 
-        /* Bottom Action Bar */
+        /* Bottom Control Bar */
         .action-bar {
             background-color: var(--surface);
             border-top: 1px solid var(--border);
@@ -252,7 +275,7 @@
         .btn-secondary {
             background-color: var(--bg);
             color: var(--text-main);
-            flex: 0.5;
+            flex: 0.45;
         }
         .btn-primary {
             background-color: var(--primary);
@@ -260,7 +283,7 @@
         }
         .btn:disabled { opacity: 0.4; }
 
-        /* Toast Modal */
+        /* App Toast */
         .toast {
             position: fixed;
             top: 20px;
@@ -268,18 +291,24 @@
             transform: translateX(-50%);
             background: rgba(15, 23, 42, 0.95);
             color: white;
-            padding: 10px 18px;
+            padding: 10px 20px;
             border-radius: 99px;
             font-size: 0.85rem;
             display: none;
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 90%;
         }
     </style>
 </head>
 <body>
 
     <header class="app-bar">
+        <div id="install-banner">
+            <span>Pasang aplikasi pada telefon?</span>
+            <button type="button" id="pwa-install-btn">PASANG</button>
+        </div>
         <div class="app-title" id="bar-title">BAHAGIAN A (1/5)</div>
         <div class="progress-track">
             <div class="progress-fill" id="progress-fill"></div>
@@ -306,9 +335,9 @@
 
                 <div class="card-group">
                     <label class="question-title">2. Fasa Umur Persaraan[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Awal Persaraan (56-65 tahun)" required> Fasa Awal (56-65 tahun)[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Pertengahan Persaraan (66-75 tahun)"> Fasa Pertengahan (66-75 tahun)[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Akhir Persaraan (76 tahun ke atas)"> Fasa Akhir (76 tahun ke atas)[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Awal Persaraan (56-65 tahun)" required> Fasa Awal Persaraan (56-65 tahun)[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Pertengahan Persaraan (66-75 tahun)"> Fasa Pertengahan Persaraan (66-75 tahun)[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Akhir Persaraan (76 tahun ke atas)"> Fasa Akhir Persaraan (76 tahun ke atas)[cite: 1]</label>
                 </div>
 
                 <div class="card-group">
@@ -332,32 +361,32 @@
 
                 <div class="card-group">
                     <label class="question-title">5. Susunan Kediaman Semasa[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersama pasangan / anak / keluarga" required> Tinggal bersama keluarga / pasangan[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersama pasangan / anak / keluarga" required> Tinggal bersama pasangan / anak / keluarga[cite: 1]</label>
                     <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersendirian"> Tinggal bersendirian[cite: 1]</label>
                     <label class="choice-item"><input type="radio" name="kediaman" value="Pusat jagaan / Pondok warga emas"> Pusat jagaan / Pondok warga emas[cite: 1]</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">6. Status Kesihatan Kronik[cite: 1]</label>
+                    <label class="question-title">6. Status Kesihatan Kronik / Komorbiditi[cite: 1]</label>
                     <label class="choice-item"><input type="radio" name="kesihatan" value="Tiada sebarang penyakit kronik" required> Tiada sebarang penyakit kronik[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 1 penyakit kronik"> Mempunyai 1 penyakit kronik[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)"> 2 atau lebih penyakit kronik[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 1 penyakit kronik"> Mempunyai 1 penyakit kronik (cth: Darah tinggi / Kencing manis)[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)"> Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)[cite: 1]</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">7. Penglibatan Aktiviti (Pilihan pelbagai)[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Sukan tarian mesra usia / Senamrobik berjadual"> Sukan tarian / Senamrobik[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Latihan kesedaran (mindfulness) / Relaksasi pernafasan"> Relaksasi / Mindfulness[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Kelas agama / Program kerohanian rumah ibadat"> Kelas agama / Kerohanian[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Aktiviti persatuan komuniti / Kesukarelawanan"> Komuniti / Kesukarelawanan[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Tiada aktiviti terancang / Pasif di rumah"> Tiada aktiviti terancang[cite: 1]</label>
+                    <label class="question-title">7. Penglibatan dalam Aktiviti Fizikal/Sosial (Boleh tanda lebih dari satu)[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Sukan tarian mesra usia / Senamrobik berjadual"> Sukan tarian mesra usia / Senamrobik berjadual[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Latihan kesedaran (mindfulness) / Relaksasi pernafasan"> Latihan kesedaran (mindfulness) / Relaksasi pernafasan[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Kelas agama / Program kerohanian rumah ibadat"> Kelas agama / Program kerohanian rumah ibadat[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Aktiviti persatuan komuniti / Kesukarelawanan"> Aktiviti persatuan komuniti / Kesukarelawanan[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Tiada aktiviti terancang / Pasif di rumah"> Tiada aktiviti terancang / Pasif di rumah[cite: 1]</label>
                 </div>
             </section>
 
             <!-- STEP 2: FIZIKAL -->
             <section class="step-card" data-step="2">
                 <div class="section-header">
-                    <h2>Bahagian B: Kesihatan Fizikal</h2>
+                    <h2>Bahagian B: Kesihatan Fizikal, Kecergasan dan Keseimbangan</h2>
                     <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
                 </div>
                 <div id="step-b-list"></div>
@@ -366,7 +395,7 @@
             <!-- STEP 3: PSIKOLOGI -->
             <section class="step-card" data-step="3">
                 <div class="section-header">
-                    <h2>Bahagian C: Kesihatan Psikologi</h2>
+                    <h2>Bahagian C: Kesihatan Psikologi, Minda & Daya Tahan</h2>
                     <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
                 </div>
                 <div id="step-c-list"></div>
@@ -375,7 +404,7 @@
             <!-- STEP 4: SOSIAL -->
             <section class="step-card" data-step="4">
                 <div class="section-header">
-                    <h2>Bahagian D: Sokongan Sosial</h2>
+                    <h2>Bahagian D: Sokongan Sosial dan Integrasi Komuniti</h2>
                     <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
                 </div>
                 <div id="step-d-list"></div>
@@ -384,7 +413,7 @@
             <!-- STEP 5: KEROHANIAN -->
             <section class="step-card" data-step="5">
                 <div class="section-header">
-                    <h2>Bahagian E: Kerohanian & Spiritual</h2>
+                    <h2>Bahagian E: Kerohanian dan Psikospiritual</h2>
                     <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
                 </div>
                 <div id="step-e-list"></div>
@@ -398,7 +427,8 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHWp64DLr1YpgCUuzvjPgorYKaPm20wNYEAs2k7do8ObHmJnzVluwmWbDpZjVfnK5S/exec";
+        // REPLACE WITH YOUR APPS SCRIPT WEB APP URL
+        const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
 
         const surveyQuestions = {
             'step-b-list': {
@@ -445,7 +475,7 @@
 
         const scaleShort = { 1: "STS", 2: "TS", 3: "N", 4: "S", 5: "SS" };
 
-        // Render Likert Controls
+        // Generate Likert UI
         for (const [targetId, section] of Object.entries(surveyQuestions)) {
             const container = document.getElementById(targetId);
             section.items.forEach((text, i) => {
@@ -469,7 +499,7 @@
             });
         }
 
-        // Stepper Logic
+        // Stepper Navigation
         let currentStep = 1;
         const totalSteps = 5;
         const barTitles = [
@@ -490,7 +520,7 @@
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 2200);
+            setTimeout(() => { t.style.display = 'none'; }, 2500);
         }
 
         function validateStep(step) {
@@ -502,7 +532,6 @@
                     if (!checked) return false;
                 }
             }
-            // Validate likert completion
             if (step >= 2) {
                 const likerts = activeCard.querySelectorAll('.likert-card');
                 for (let l of likerts) {
@@ -546,7 +575,7 @@
             }
         });
 
-        // Highlight selection styling on simple radio choices
+        // Dynamic highlight for options
         document.querySelectorAll('.choice-item input').forEach(input => {
             input.addEventListener('change', (e) => {
                 if (e.target.type === 'radio') {
@@ -562,7 +591,7 @@
             });
         });
 
-        // Submit to Apps Script Web App
+        // Form Submit
         function submitSurvey() {
             nextBtn.disabled = true;
             prevBtn.disabled = true;
@@ -577,13 +606,13 @@
                 mode: 'no-cors'
             })
             .then(() => {
-                showToast('Data berjaya dihantar!');
+                showToast('Data berjaya dihantar ke pangkalan data!');
                 setTimeout(() => {
                     form.reset();
                     document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
                     currentStep = 1;
                     updateStepUI();
-                }, 1000);
+                }, 1200);
             })
             .catch(() => {
                 showToast('Ralat sambungan. Sila cuba lagi.');
@@ -598,9 +627,36 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+                navigator.serviceWorker.register('./sw.js', { scope: './' })
+                    .catch(err => console.error('SW Error:', err));
             });
         }
+
+        // In-App Native Installation Prompt Trigger
+        let deferredPrompt;
+        const installBanner = document.getElementById('install-banner');
+        const installBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'flex';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                installBanner.style.display = 'none';
+            }
+            deferredPrompt = null;
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBanner.style.display = 'none';
+            deferredPrompt = null;
+        });
     </script>
 </body>
 </html>
