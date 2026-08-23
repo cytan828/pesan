@@ -1,0 +1,9 @@
+{
+  "name": "Borang Kajian PESAN 3",
+  "short_name": "KajianPESAN",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2b6cb0",
+  "orientation": "portrait"
+}
