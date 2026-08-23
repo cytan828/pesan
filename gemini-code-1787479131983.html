@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kajian PESAN">
+    <link rel="manifest" href="manifest.json">
+    <title>Instrumen Kajian PESAN 3 (2026)</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #eff6ff;
+            --surface: #ffffff;
+            --bg: #f1f5f9;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+            --safe-bottom: env(safe-area-inset-bottom, 16px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* App Bar */
+        .app-bar {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+            padding-top: max(12px, env(safe-area-inset-top));
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 50;
+        }
+        .app-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: center;
+        }
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 20%;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        /* Swipeable / Step Content Container */
+        .view-port {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .step-card {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+        .step-card.active {
+            display: flex;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .section-header h2 {
+            font-size: 1rem;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+        .section-header p {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+
+        /* Form Components */
+        .card-group {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .card-group label.question-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.35;
+            color: var(--text-main);
+        }
+
+        /* Native-like List Choices */
+        .choice-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .choice-item:active { background: var(--bg); }
+        .choice-item input { margin-right: 12px; transform: scale(1.15); accent-color: var(--primary); }
+        .choice-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .text-input-box {
+            width: 100%;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            margin-top: 6px;
+            outline: none;
+            user-select: text;
+        }
+        .text-input-box:focus { border-color: var(--primary); }
+
+        /* Mobile App Segmented Likert Scale */
+        .likert-card {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .likert-card .q-text {
+            font-size: 0.88rem;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+        .segmented-control {
+            display: flex;
+            background: var(--bg);
+            padding: 3px;
+            border-radius: 8px;
+            gap: 3px;
+        }
+        .segment {
+            flex: 1;
+            position: relative;
+        }
+        .segment input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .segment label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            transition: all 0.15s ease;
+        }
+        .segment label span {
+            font-size: 0.62rem;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+        .segment input:checked + label {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .segment input:checked + label span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Bottom Action Bar */
+        .action-bar {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            padding-bottom: max(12px, var(--safe-bottom));
+            display: flex;
+            gap: 12px;
+            z-index: 50;
+        }
+        .btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: opacity 0.15s;
+        }
+        .btn-secondary {
+            background-color: var(--bg);
+            color: var(--text-main);
+            flex: 0.5;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+        .btn:disabled { opacity: 0.4; }
+
+        /* Toast Modal */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-bar">
+        <div class="app-title" id="bar-title">BAHAGIAN A (1/5)</div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </header>
+
+    <div class="toast" id="toast"></div>
+
+    <main class="view-port">
+        <form id="survey-form">
+            
+            <!-- STEP 1: DEMOGRAFI -->
+            <section class="step-card active" data-step="1">
+                <div class="section-header">
+                    <h2>Bahagian A: Profil Demografi</h2>
+                    <p>Sila lengkapkan profil diri anda di bawah[cite: 1].</p>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">1. Jantina[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="jantina" value="Lelaki" required> Lelaki[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="jantina" value="Perempuan"> Perempuan[cite: 1]</label>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">2. Fasa Umur Persaraan[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Awal Persaraan (56-65 tahun)" required> Fasa Awal (56-65 tahun)[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Pertengahan Persaraan (66-75 tahun)"> Fasa Pertengahan (66-75 tahun)[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Akhir Persaraan (76 tahun ke atas)"> Fasa Akhir (76 tahun ke atas)[cite: 1]</label>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">3. Pegangan Agama[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Islam" required> Islam[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Buddha"> Buddha[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Hindu"> Hindu[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Kristian"> Kristian[cite: 1]</label>
+                    <div style="display: flex; flex-direction: column;">
+                        <label class="choice-item"><input type="radio" name="agama" value="Lain-lain"> Lain-lain[cite: 1]</label>
+                        <input type="text" name="agama_lain" placeholder="Nyatakan jika lain-lain" class="text-input-box">
+                    </div>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">4. Status Perkahwinan[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Berkahwin" required> Berkahwin[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Duda / Janda / Balu"> Duda / Janda / Balu[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Bujang"> Bujang[cite: 1]</label>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">5. Susunan Kediaman Semasa[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersama pasangan / anak / keluarga" required> Tinggal bersama keluarga / pasangan[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersendirian"> Tinggal bersendirian[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Pusat jagaan / Pondok warga emas"> Pusat jagaan / Pondok warga emas[cite: 1]</label>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">6. Status Kesihatan Kronik[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Tiada sebarang penyakit kronik" required> Tiada sebarang penyakit kronik[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 1 penyakit kronik"> Mempunyai 1 penyakit kronik[cite: 1]</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)"> 2 atau lebih penyakit kronik[cite: 1]</label>
+                </div>
+
+                <div class="card-group">
+                    <label class="question-title">7. Penglibatan Aktiviti (Pilihan pelbagai)[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Sukan tarian mesra usia / Senamrobik berjadual"> Sukan tarian / Senamrobik[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Latihan kesedaran (mindfulness) / Relaksasi pernafasan"> Relaksasi / Mindfulness[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Kelas agama / Program kerohanian rumah ibadat"> Kelas agama / Kerohanian[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Aktiviti persatuan komuniti / Kesukarelawanan"> Komuniti / Kesukarelawanan[cite: 1]</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Tiada aktiviti terancang / Pasif di rumah"> Tiada aktiviti terancang[cite: 1]</label>
+                </div>
+            </section>
+
+            <!-- STEP 2: FIZIKAL -->
+            <section class="step-card" data-step="2">
+                <div class="section-header">
+                    <h2>Bahagian B: Kesihatan Fizikal</h2>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                </div>
+                <div id="step-b-list"></div>
+            </section>
+
+            <!-- STEP 3: PSIKOLOGI -->
+            <section class="step-card" data-step="3">
+                <div class="section-header">
+                    <h2>Bahagian C: Kesihatan Psikologi</h2>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                </div>
+                <div id="step-c-list"></div>
+            </section>
+
+            <!-- STEP 4: SOSIAL -->
+            <section class="step-card" data-step="4">
+                <div class="section-header">
+                    <h2>Bahagian D: Sokongan Sosial</h2>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                </div>
+                <div id="step-d-list"></div>
+            </section>
+
+            <!-- STEP 5: KEROHANIAN -->
+            <section class="step-card" data-step="5">
+                <div class="section-header">
+                    <h2>Bahagian E: Kerohanian & Spiritual</h2>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                </div>
+                <div id="step-e-list"></div>
+            </section>
+        </form>
+    </main>
+
+    <footer class="action-bar">
+        <button type="button" class="btn btn-secondary" id="prev-btn" style="visibility: hidden;">Kembali</button>
+        <button type="button" class="btn btn-primary" id="next-btn">Seterusnya</button>
+    </footer>
+
+    <script>
+        const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+
+        const surveyQuestions = {
+            'step-b-list': {
+                prefix: 'B',
+                items: [
+                    "Aktiviti fizikal berjadual membantu mengurangkan kemerosotan fungsi tubuh badan saya.",
+                    "Penglibatan dalam sukan tarian / senaman berirama meningkatkan kecergasan otot dan fleksibiliti sendi saya.",
+                    "Senaman kecergasan membantu mengekalkan kestabilan postur tubuh saya semasa berdiri atau berjalan.",
+                    "Koordinasi pergerakan motor tubuh saya bertambah lancar setelah melakukan aktiviti fizikal berstruktur.",
+                    "Kelemahan fizikal dan keletihan membataskan keupayaan saya untuk bergerak secara mandiri."
+                ]
+            },
+            'step-c-list': {
+                prefix: 'C',
+                items: [
+                    "Saya berasa sangat bimbang tentang perubahan emosi dan ketidaktentuan masa hadapan saya selepas bersara.",
+                    "Fikiran mengenai pengakhiran hayat dan kematian sering menimbulkan rasa resah dalam diri saya.",
+                    "Latihan kesedaran (mindfulness) berkesan membantu menenangkan fikiran saya daripada tekanan harian.",
+                    "Penggunaan teknik relaksasi dan kawalan pernafasan membantu saya mengawal ketegangan emosi dengan baik.",
+                    "Saya memiliki kekuatan mental dan daya tahan psikologi yang tinggi untuk menghadapi fasa penuaan dengan positif."
+                ]
+            },
+            'step-d-list': {
+                prefix: 'D',
+                items: [
+                    "Ahli keluarga sentiasa memberi sokongan moral dan mengambil berat tentang kebajikan harian saya.",
+                    "Hubungan rapat dengan jiran dan rakan komuniti membantu mengurangkan rasa sunyi dalam hidup saya.",
+                    "Penyertaan dalam aktiviti kemasyarakatan merapatkan interaksi sosial saya dengan kelompok pelbagai usia.",
+                    "Saya sering merasa tersisih dan kurang dilibatkan dalam aktiviti kemasyarakatan di kawasan tempat tinggal saya.",
+                    "Rangkaian sokongan sosial yang saya terima membolehkan saya menjalani kehidupan penuaan yang bermaruah."
+                ]
+            },
+            'step-e-list': {
+                prefix: 'E',
+                items: [
+                    "Pengukuhan nilai kerohanian mengikut pegangan agama masing-masing memberi ketenangan jiwa kepada saya.",
+                    "Penghayatan amalan keagamaan memberi saya panduan hidup yang bermakna dalam menempuh usia emas.",
+                    "Nilai spiritualiti membolehkan saya menerima proses penuaan dan keterbatasan diri dengan hati yang reda.",
+                    "Saya berasa sukar mencari ketenteraman batin apabila berhadapan dengan masalah kesihatan yang berpanjangan.",
+                    "Amalan kerohanian memupuk keharmonian batiniah dan membantu saya menjalani kehidupan yang bahagia."
+                ]
+            }
+        };
+
+        const scaleShort = { 1: "STS", 2: "TS", 3: "N", 4: "S", 5: "SS" };
+
+        // Render Likert Controls
+        for (const [targetId, section] of Object.entries(surveyQuestions)) {
+            const container = document.getElementById(targetId);
+            section.items.forEach((text, i) => {
+                const idx = i + 1;
+                const field = `${section.prefix}${idx}`;
+                const el = document.createElement('div');
+                el.className = 'likert-card';
+                
+                let segments = '';
+                for (let v = 1; v <= 5; v++) {
+                    segments += `
+                        <div class="segment">
+                            <input type="radio" id="${field}_${v}" name="${field}" value="${v}">
+                            <label for="${field}_${v}">${v}<span>${scaleShort[v]}</span></label>
+                        </div>
+                    `;
+                }
+                
+                el.innerHTML = `<div class="q-text">${idx}. ${text}</div><div class="segmented-control">${segments}</div>`;
+                container.appendChild(el);
+            });
+        }
+
+        // Stepper Logic
+        let currentStep = 1;
+        const totalSteps = 5;
+        const barTitles = [
+            "BAHAGIAN A (1/5)",
+            "BAHAGIAN B: FIZIKAL (2/5)",
+            "BAHAGIAN C: PSIKOLOGI (3/5)",
+            "BAHAGIAN D: SOSIAL (4/5)",
+            "BAHAGIAN E: KEROHANIAN (5/5)"
+        ];
+
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const barTitle = document.getElementById('bar-title');
+        const progressFill = document.getElementById('progress-fill');
+        const viewPort = document.querySelector('.view-port');
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 2200);
+        }
+
+        function validateStep(step) {
+            const activeCard = document.querySelector(`.step-card[data-step="${step}"]`);
+            const inputs = activeCard.querySelectorAll('input[required]');
+            for (let input of inputs) {
+                if (input.type === 'radio') {
+                    const checked = activeCard.querySelector(`input[name="${input.name}"]:checked`);
+                    if (!checked) return false;
+                }
+            }
+            // Validate likert completion
+            if (step >= 2) {
+                const likerts = activeCard.querySelectorAll('.likert-card');
+                for (let l of likerts) {
+                    const checked = l.querySelector('input:checked');
+                    if (!checked) return false;
+                }
+            }
+            return true;
+        }
+
+        function updateStepUI() {
+            document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.step-card[data-step="${currentStep}"]`).classList.add('active');
+
+            barTitle.textContent = barTitles[currentStep - 1];
+            progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
+            
+            prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            nextBtn.textContent = currentStep === totalSteps ? 'Hantar Data' : 'Seterusnya';
+            viewPort.scrollTop = 0;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (!validateStep(currentStep)) {
+                showToast('Sila jawab semua soalan sebelum meneruskan.');
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateStepUI();
+            } else {
+                submitSurvey();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepUI();
+            }
+        });
+
+        // Highlight selection styling on simple radio choices
+        document.querySelectorAll('.choice-item input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                if (e.target.type === 'radio') {
+                    document.querySelectorAll(`input[name="${e.target.name}"]`).forEach(r => {
+                        r.closest('.choice-item').classList.remove('selected');
+                    });
+                }
+                if (e.target.checked) {
+                    e.target.closest('.choice-item').classList.add('selected');
+                } else {
+                    e.target.closest('.choice-item').classList.remove('selected');
+                }
+            });
+        });
+
+        // Submit to Apps Script Web App
+        function submitSurvey() {
+            nextBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.textContent = 'Menghantar...';
+
+            const form = document.getElementById('survey-form');
+            const formData = new FormData(form);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                showToast('Data berjaya dihantar!');
+                setTimeout(() => {
+                    form.reset();
+                    document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+                    currentStep = 1;
+                    updateStepUI();
+                }, 1000);
+            })
+            .catch(() => {
+                showToast('Ralat sambungan. Sila cuba lagi.');
+            })
+            .finally(() => {
+                nextBtn.disabled = false;
+                prevBtn.disabled = false;
+                nextBtn.textContent = currentStep === totalSteps ? 'Hantar Data' : 'Seterusnya';
+            });
+        }
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+            });
+        }
+    </script>
+</body>
+</html>
