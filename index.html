@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2b6cb0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Kajian PESAN">
+    <link rel="manifest" href="manifest.json">
+    <title>Instrumen Kajian Kesejahteraan Alam Emasku PESAN 3 (2026)</title>
+    
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --primary-hover: #2c5282;
+            --bg: #f7fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 12px; }
+        .container { max-width: 760px; background: var(--card-bg); padding: 20px; margin: auto; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        
+        h1 { font-size: 1.15rem; text-align: center; color: #1a365d; line-height: 1.4; margin-bottom: 12px; }
+        h2 { font-size: 0.95rem; margin-top: 24px; background: var(--primary); color: #fff; padding: 10px 12px; border-radius: 6px; }
+        .note { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+        
+        .scale-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            border-radius: 6px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label.question { font-weight: 600; display: block; margin-bottom: 8px; font-size: 0.9rem; }
+        
+        /* Touch-friendly radio / checkbox options */
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.15s;
+        }
+        .option-label:active { background: #edf2f7; }
+        .option-label input { margin-right: 12px; transform: scale(1.2); }
+        .text-input { width: 100%; margin-top: 6px; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 0.85rem; }
+
+        /* Mobile Likert Card */
+        .likert-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .likert-card .q-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; line-height: 1.35; }
+        .likert-btn-group { display: flex; justify-content: space-between; gap: 6px; }
+        
+        .likert-choice { flex: 1; text-align: center; }
+        .likert-choice input { display: none; }
+        .likert-choice label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #edf2f7;
+            border-radius: 6px;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid transparent;
+            min-height: 44px;
+        }
+        .likert-choice label span { font-size: 0.65rem; font-weight: normal; color: var(--text-muted); margin-top: 2px; }
+        
+        /* Highlight selected likert choice */
+        .likert-choice input:checked + label {
+            background: #ebf8ff;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .likert-choice input:checked + label span { color: var(--primary); font-weight: 600; }
+
+        button {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            min-height: 48px;
+        }
+        button:disabled { background-color: #a0aec0; }
+        
+        #status-message { display: none; margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center; font-size: 0.85rem; font-weight: 600; }
+        .status-success { background: #c6f6d5; color: #22543d; }
+        .status-error { background: #fed7d7; color: #742a2a; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Instrumen Kajian Kesejahteraan Alam Emasku PESAN 3 (2026)<br>BORANG SOAL SELIDIK</h1>
+    <p class="note">Maklumat anda adalah SULIT dan digunakan untuk analisis akademik sahaja.</p>
+
+    <form id="survey-form">
+        
+        <h2>BAHAGIAN A: PROFIL DEMOGRAFI</h2>
+        
+        <div class="form-group">
+            <label class="question">1. Jantina</label>
+            <label class="option-label"><input type="radio" name="jantina" value="Lelaki" required> Lelaki</label>
+            <label class="option-label"><input type="radio" name="jantina" value="Perempuan"> Perempuan</label>
+        </div>
+
+        <div class="form-group">
+            <label class="question">2. Fasa Umur Persaraan</label>
+            <label class="option-label"><input type="radio" name="umur" value="Fasa Awal Persaraan (56-65 tahun)" required> Fasa Awal (56-65 tahun)</label>
+            <label class="option-label"><input type="radio" name="umur" value="Fasa Pertengahan Persaraan (66-75 tahun)"> Fasa Pertengahan (66-75 tahun)</label>
+            <label class="option-label"><input type="radio" name="umur" value="Fasa Akhir Persaraan (76 tahun ke atas)"> Fasa Akhir (76 tahun ke atas)</label>
+        </div>
+
+        <div class="form-group">
+            <label class="question">3. Pegangan Agama</label>
+            <label class="option-label"><input type="radio" name="agama" value="Islam" required> Islam</label>
+            <label class="option-label"><input type="radio" name="agama" value="Buddha"> Buddha</label>
+            <label class="option-label"><input type="radio" name="agama" value="Hindu"> Hindu</label>
+            <label class="option-label"><input type="radio" name="agama" value="Kristian"> Kristian</label>
+            <label class="option-label" style="flex-direction: column; align-items: flex-start;">
+                <div style="display: flex; align-items: center;"><input type="radio" name="agama" value="Lain-lain"> Lain-lain</div>
+                <input type="text" name="agama_lain" placeholder="Sila nyatakan jika lain-lain" class="text-input">
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label class="question">4. Status Perkahwinan</label>
+            <label class="option-label"><input type="radio" name="perkahwinan" value="Berkahwin" required> Berkahwin</label>
+            <label class="option-label"><input type="radio" name="perkahwinan" value="Duda / Janda / Balu"> Duda / Janda / Balu</label>
+            <label class="option-label"><input type="radio" name="perkahwinan" value="Bujang"> Bujang</label>
+        </div>
+
+        <div class="form-group">
+            <label class="question">5. Susunan Kediaman Semasa</label>
+            <label class="option-label"><input type="radio" name="kediaman" value="Tinggal bersama pasangan / anak / keluarga" required> Tinggal bersama keluarga / pasangan</label>
+            <label class="option-label"><input type="radio" name="kediaman" value="Tinggal bersendirian"> Tinggal bersendirian</label>
+            <label class="option-label"><input type="radio" name="kediaman" value="Pusat jagaan / Pondok warga emas"> Pusat jagaan / Pondok</label>
+        </div>
+
+        <div class="form-group">
+            <label class="question">6. Status Kesihatan Kronik</label>
+            <label class="option-label"><input type="radio" name="kesihatan" value="Tiada sebarang penyakit kronik" required> Tiada penyakit kronik</label>
+            <label class="option-label"><input type="radio" name="kesihatan" value="Mempunyai 1 penyakit kronik"> 1 penyakit kronik (cth: Darah tinggi)</label>
+            <label class="option-label"><input type="radio" name="kesihatan" value="Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)"> 2 atau lebih penyakit kronik</label>
+        </div>
+
+        <div class="form-group">
+            <label class="question">7. Penglibatan Aktiviti (Pilihan pelbagai)</label>
+            <label class="option-label"><input type="checkbox" name="aktiviti" value="Sukan tarian mesra usia / Senamrobik berjadual"> Sukan tarian / Senamrobik</label>
+            <label class="option-label"><input type="checkbox" name="aktiviti" value="Latihan kesedaran (mindfulness) / Relaksasi pernafasan"> Relaksasi / Mindfulness</label>
+            <label class="option-label"><input type="checkbox" name="aktiviti" value="Kelas agama / Program kerohanian rumah ibadat"> Kelas agama / Kerohanian</label>
+            <label class="option-label"><input type="checkbox" name="aktiviti" value="Aktiviti persatuan komuniti / Kesukarelawanan"> Komuniti / Kesukarelawanan</label>
+            <label class="option-label"><input type="checkbox" name="aktiviti" value="Tiada aktiviti terancang / Pasif di rumah"> Tiada aktiviti terancang</label>
+        </div>
+
+        <div class="scale-sticky">
+            Skala: <strong>1</strong>: STS | <strong>2</strong>: TS | <strong>3</strong>: N | <strong>4</strong>: S | <strong>5</strong>: SS
+        </div>
+
+        <h2>BAHAGIAN B: KESIHATAN FIZIKAL & KECERGASAN</h2>
+        <div id="section-b-container"></div>
+
+        <h2>BAHAGIAN C: PSIKOLOGI, MINDA & DAYA TAHAN</h2>
+        <div id="section-c-container"></div>
+
+        <h2>BAHAGIAN D: SOKONGAN SOSIAL & KOMUNITI</h2>
+        <div id="section-d-container"></div>
+
+        <h2>BAHAGIAN E: KEROHANIAN & PSIKOSPIRITUAL</h2>
+        <div id="section-e-container"></div>
+
+        <button type="submit" id="submit-btn">Hantar Data</button>
+        <div id="status-message"></div>
+    </form>
+</div>
+
+<script>
+    // 1. Data configuration for Likert items
+    const sections = {
+        'section-b-container': {
+            prefix: 'B',
+            items: [
+                "Aktiviti fizikal berjadual membantu mengurangkan kemerosotan fungsi tubuh badan saya.",
+                "Penglibatan dalam sukan tarian / senaman berirama meningkatkan kecergasan otot dan fleksibiliti sendi saya.",
+                "Senaman kecergasan membantu mengekalkan kestabilan postur tubuh saya semasa berdiri atau berjalan.",
+                "Koordinasi pergerakan motor tubuh saya bertambah lancar setelah melakukan aktiviti fizikal berstruktur.",
+                "Kelemahan fizikal dan keletihan membataskan keupayaan saya untuk bergerak secara mandiri."
+            ]
+        },
+        'section-c-container': {
+            prefix: 'C',
+            items: [
+                "Saya berasa sangat bimbang tentang perubahan emosi dan ketidaktentuan masa hadapan saya selepas bersara.",
+                "Fikiran mengenai pengakhiran hayat dan kematian sering menimbulkan rasa resah dalam diri saya.",
+                "Latihan kesedaran (mindfulness) berkesan membantu menenangkan fikiran saya daripada tekanan harian.",
+                "Penggunaan teknik relaksasi dan kawalan pernafasan membantu saya mengawal ketegangan emosi dengan baik.",
+                "Saya memiliki kekuatan mental dan daya tahan psikologi yang tinggi untuk menghadapi fasa penuaan dengan positif."
+            ]
+        },
+        'section-d-container': {
+            prefix: 'D',
+            items: [
+                "Ahli keluarga sentiasa memberi sokongan moral dan mengambil berat tentang kebajikan harian saya.",
+                "Hubungan rapat dengan jiran dan rakan komuniti membantu mengurangkan rasa sunyi dalam hidup saya.",
+                "Penyertaan dalam aktiviti kemasyarakatan merapatkan interaksi sosial saya dengan kelompok pelbagai usia.",
+                "Saya sering merasa tersisih dan kurang dilibatkan dalam aktiviti kemasyarakatan di kawasan tempat tinggal saya.",
+                "Rangkaian sokongan sosial yang saya terima membolehkan saya menjalani kehidupan penuaan yang bermaruah."
+            ]
+        },
+        'section-e-container': {
+            prefix: 'E',
+            items: [
+                "Pengukuhan nilai kerohanian mengikut pegangan agama masing-masing memberi ketenangan jiwa kepada saya.",
+                "Penghayatan amalan keagamaan memberi saya panduan hidup yang bermakna dalam menempuh usia emas.",
+                "Nilai spiritualiti membolehkan saya menerima proses penuaan dan keterbatasan diri dengan hati yang reda.",
+                "Saya berasa sukar mencari ketenteraman batin apabila berhadapan dengan masalah kesihatan yang berpanjangan.",
+                "Amalan kerohanian memupuk keharmonian batiniah dan membantu saya menjalani kehidupan yang bahagia."
+            ]
+        }
+    };
+
+    const scaleLabels = { 1: "STS", 2: "TS", 3: "N", 4: "S", 5: "SS" };
+
+    // Dynamically render mobile likert cards
+    for (const [containerId, data] of Object.entries(sections)) {
+        const container = document.getElementById(containerId);
+        data.items.forEach((text, idx) => {
+            const num = idx + 1;
+            const fieldName = `${data.prefix}${num}`;
+            
+            const card = document.createElement('div');
+            card.className = 'likert-card';
+            
+            let html = `<div class="q-title">${num}. ${text}</div><div class="likert-btn-group">`;
+            for (let val = 1; val <= 5; val++) {
+                html += `
+                    <div class="likert-choice">
+                        <input type="radio" id="${fieldName}_${val}" name="${fieldName}" value="${val}" required>
+                        <label for="${fieldName}_${val}">
+                            ${val}
+                            <span>${scaleLabels[val]}</span>
+                        </label>
+                    </div>`;
+            }
+            html += `</div>`;
+            card.innerHTML = html;
+            container.appendChild(card);
+        });
+    }
+
+    // 2. Submit handling (AJAX)
+    const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+    const form = document.getElementById('survey-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const statusMessage = document.getElementById('status-message');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Menghantar Data...';
+        statusMessage.style.display = 'none';
+
+        const formData = new FormData(form);
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors'
+        })
+        .then(() => {
+            statusMessage.textContent = 'Borang berjaya dihantar ke Google Sheets!';
+            statusMessage.className = 'status-success';
+            statusMessage.style.display = 'block';
+            form.reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(() => {
+            statusMessage.textContent = 'Ralat sambungan. Sila semak talian internet.';
+            statusMessage.className = 'status-error';
+            statusMessage.style.display = 'block';
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Hantar Data';
+        });
+    });
+
+    // 3. Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration skipped:', err));
+        });
+    }
+</script>
+
+</body>
+</html>
