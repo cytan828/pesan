@@ -174,9 +174,9 @@
         .choice-item:active { background: var(--bg); }
         .choice-item input { margin-right: 12px; transform: scale(1.15); accent-color: var(--primary); }
         .choice-item.selected {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+            color: #ffffff;
             font-weight: 600;
         }
 
@@ -200,6 +200,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            transition: all 0.2s ease;
         }
         .likert-card .q-text {
             font-size: 0.88rem;
@@ -208,7 +209,7 @@
         }
         .segmented-control {
             display: flex;
-            background: var(--bg);
+            background: #e2e8f0;
             padding: 3px;
             border-radius: 8px;
             gap: 3px;
@@ -241,13 +242,15 @@
             font-weight: 400;
             margin-top: 2px;
         }
+        
+        /* Dark Selected Likert Option */
         .segment input:checked + label {
-            background: var(--surface);
-            color: var(--primary);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: #1e3a8a;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         .segment input:checked + label span {
-            color: var(--primary);
+            color: #bfdbfe;
             font-weight: 600;
         }
 
@@ -324,62 +327,62 @@
             <section class="step-card active" data-step="1">
                 <div class="section-header">
                     <h2>Bahagian A: Profil Demografi</h2>
-                    <p>Sila lengkapkan profil diri anda di bawah[cite: 1].</p>
+                    <p>Sila lengkapkan profil diri anda di bawah.</p>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">1. Jantina[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="jantina" value="Lelaki" required> Lelaki[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="jantina" value="Perempuan"> Perempuan[cite: 1]</label>
+                    <label class="question-title">1. Jantina</label>
+                    <label class="choice-item"><input type="radio" name="jantina" value="Lelaki" required> Lelaki</label>
+                    <label class="choice-item"><input type="radio" name="jantina" value="Perempuan"> Perempuan</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">2. Fasa Umur Persaraan[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Awal Persaraan (56-65 tahun)" required> Fasa Awal Persaraan (56-65 tahun)[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Pertengahan Persaraan (66-75 tahun)"> Fasa Pertengahan Persaraan (66-75 tahun)[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Akhir Persaraan (76 tahun ke atas)"> Fasa Akhir Persaraan (76 tahun ke atas)[cite: 1]</label>
+                    <label class="question-title">2. Fasa Umur Persaraan</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Awal Persaraan (56-65 tahun)" required> Fasa Awal Persaraan (56-65 tahun)</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Pertengahan Persaraan (66-75 tahun)"> Fasa Pertengahan Persaraan (66-75 tahun)</label>
+                    <label class="choice-item"><input type="radio" name="umur" value="Fasa Akhir Persaraan (76 tahun ke atas)"> Fasa Akhir Persaraan (76 tahun ke atas)</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">3. Pegangan Agama[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="agama" value="Islam" required> Islam[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="agama" value="Buddha"> Buddha[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="agama" value="Hindu"> Hindu[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="agama" value="Kristian"> Kristian[cite: 1]</label>
+                    <label class="question-title">3. Pegangan Agama</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Islam" required> Islam</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Buddha"> Buddha</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Hindu"> Hindu</label>
+                    <label class="choice-item"><input type="radio" name="agama" value="Kristian"> Kristian</label>
                     <div style="display: flex; flex-direction: column;">
-                        <label class="choice-item"><input type="radio" name="agama" value="Lain-lain"> Lain-lain[cite: 1]</label>
+                        <label class="choice-item"><input type="radio" name="agama" value="Lain-lain"> Lain-lain</label>
                         <input type="text" name="agama_lain" placeholder="Nyatakan jika lain-lain" class="text-input-box">
                     </div>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">4. Status Perkahwinan[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Berkahwin" required> Berkahwin[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Duda / Janda / Balu"> Duda / Janda / Balu[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Bujang"> Bujang[cite: 1]</label>
+                    <label class="question-title">4. Status Perkahwinan</label>
+                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Berkahwin" required> Berkahwin</label>
+                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Duda / Janda / Balu"> Duda / Janda / Balu</label>
+                    <label class="choice-item"><input type="radio" name="perkahwinan" value="Bujang"> Bujang</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">5. Susunan Kediaman Semasa[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersama pasangan / anak / keluarga" required> Tinggal bersama pasangan / anak / keluarga[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersendirian"> Tinggal bersendirian[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kediaman" value="Pusat jagaan / Pondok warga emas"> Pusat jagaan / Pondok warga emas[cite: 1]</label>
+                    <label class="question-title">5. Susunan Kediaman Semasa</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersama pasangan / anak / keluarga" required> Tinggal bersama pasangan / anak / keluarga</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Tinggal bersendirian"> Tinggal bersendirian</label>
+                    <label class="choice-item"><input type="radio" name="kediaman" value="Pusat jagaan / Pondok warga emas"> Pusat jagaan / Pondok warga emas</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">6. Status Kesihatan Kronik / Komorbiditi[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kesihatan" value="Tiada sebarang penyakit kronik" required> Tiada sebarang penyakit kronik[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 1 penyakit kronik"> Mempunyai 1 penyakit kronik (cth: Darah tinggi / Kencing manis)[cite: 1]</label>
-                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)"> Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)[cite: 1]</label>
+                    <label class="question-title">6. Status Kesihatan Kronik / Komorbiditi</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Tiada sebarang penyakit kronik" required> Tiada sebarang penyakit kronik</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 1 penyakit kronik"> Mempunyai 1 penyakit kronik (cth: Darah tinggi / Kencing manis)</label>
+                    <label class="choice-item"><input type="radio" name="kesihatan" value="Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)"> Mempunyai 2 atau lebih penyakit kronik (Multimorbiditi)</label>
                 </div>
 
                 <div class="card-group">
-                    <label class="question-title">7. Penglibatan dalam Aktiviti Fizikal/Sosial (Boleh tanda lebih dari satu)[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Sukan tarian mesra usia / Senamrobik berjadual"> Sukan tarian mesra usia / Senamrobik berjadual[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Latihan kesedaran (mindfulness) / Relaksasi pernafasan"> Latihan kesedaran (mindfulness) / Relaksasi pernafasan[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Kelas agama / Program kerohanian rumah ibadat"> Kelas agama / Program kerohanian rumah ibadat[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Aktiviti persatuan komuniti / Kesukarelawanan"> Aktiviti persatuan komuniti / Kesukarelawanan[cite: 1]</label>
-                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Tiada aktiviti terancang / Pasif di rumah"> Tiada aktiviti terancang / Pasif di rumah[cite: 1]</label>
+                    <label class="question-title">7. Penglibatan dalam Aktiviti Fizikal/Sosial (Boleh tanda lebih dari satu)</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Sukan tarian mesra usia / Senamrobik berjadual"> Sukan tarian mesra usia / Senamrobik berjadual</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Latihan kesedaran (mindfulness) / Relaksasi pernafasan"> Latihan kesedaran (mindfulness) / Relaksasi pernafasan</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Kelas agama / Program kerohanian rumah ibadat"> Kelas agama / Program kerohanian rumah ibadat</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Aktiviti persatuan komuniti / Kesukarelawanan"> Aktiviti persatuan komuniti / Kesukarelawanan</label>
+                    <label class="choice-item"><input type="checkbox" name="aktiviti" value="Tiada aktiviti terancang / Pasif di rumah"> Tiada aktiviti terancang / Pasif di rumah</label>
                 </div>
             </section>
 
@@ -387,7 +390,7 @@
             <section class="step-card" data-step="2">
                 <div class="section-header">
                     <h2>Bahagian B: Kesihatan Fizikal, Kecergasan dan Keseimbangan</h2>
-                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)</p>
                 </div>
                 <div id="step-b-list"></div>
             </section>
@@ -396,7 +399,7 @@
             <section class="step-card" data-step="3">
                 <div class="section-header">
                     <h2>Bahagian C: Kesihatan Psikologi, Minda & Daya Tahan</h2>
-                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)</p>
                 </div>
                 <div id="step-c-list"></div>
             </section>
@@ -405,7 +408,7 @@
             <section class="step-card" data-step="4">
                 <div class="section-header">
                     <h2>Bahagian D: Sokongan Sosial dan Integrasi Komuniti</h2>
-                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)</p>
                 </div>
                 <div id="step-d-list"></div>
             </section>
@@ -414,7 +417,7 @@
             <section class="step-card" data-step="5">
                 <div class="section-header">
                     <h2>Bahagian E: Kerohanian dan Psikospiritual</h2>
-                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)[cite: 1]</p>
+                    <p>Skala: 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju)</p>
                 </div>
                 <div id="step-e-list"></div>
             </section>
@@ -575,7 +578,7 @@
             }
         });
 
-        // Dynamic highlight for options
+        // Dynamic highlight for Demographics options
         document.querySelectorAll('.choice-item input').forEach(input => {
             input.addEventListener('change', (e) => {
                 if (e.target.type === 'radio') {
